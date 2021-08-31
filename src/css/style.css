@@ -1,0 +1,63 @@
+/* width */
+::-webkit-scrollbar {
+	width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+	background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+	background: #888;
+	transition: background 300ms;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+	background: #555;
+}
+
+body {
+	width: 400px;
+	height: 500px;
+	margin: 0;
+}
+
+input:focus-visible {
+	outline: none;
+}
+
+.main {
+	display: flex;
+	flex-direction: column;
+}
+
+#story {
+	width: 75%;
+	height: 30px;
+	font-size: 28px;
+	padding: 0.5rem 1rem;
+	border-radius: 10px;
+	display: block;
+	margin: 0.5rem auto;
+}
+
+#emoji {
+	overflow-y: scroll;
+	height: 85%;
+	bottom: 0;
+	position: absolute;
+}
+
+.icon {
+	font-size: 36px;
+	cursor: pointer;
+	background-color: transparent;
+	border-width: 0;
+	transition: background-color 300ms;
+}
+.icon:hover {
+	background-color: #ccc;
+}
