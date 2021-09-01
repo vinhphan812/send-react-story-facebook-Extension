@@ -12,7 +12,7 @@ class Facebook {
 		userId: /(?<=ACCOUNT_ID\\":\\")(.*)(?=\\",\\"USER_ID)/g,
 		title: /(?<=<title>)(.*)(?=<\/title>)/g,
 		thread: /(?<=threadId:\")([0-9]*)(?=\")/g,
-		fbDtsg: /(?<=MPageLoadClientMetrics.init\(")(.*)(?=", ")/g,
+		fbDtsg: /(?<=name="fb_dtsg" value=\")(.*)(?=\" autocomplete=\"off\" \/><input)/g,
 	};
 	constructor() {}
 	requestServer(data = { path: "/", form: "" }) {
@@ -61,42 +61,33 @@ class Facebook {
 			});
 		});
 	}
-	getThreadId(id) {
+	getField(id) {
 		const { thread, title, fbDtsg } = this.regex,
 			storyPath = "/story/view/?bucket_id=";
 		return new Promise(async (resolve, reject) => {
 			let data = await this.requestServer({
-				path: storyPath + id,
+				path: "/",
 			});
-			const { fb_dtsg, jazoest } = getFbDtsg(data);
-			this.threadId = data.match(thread)[0];
-			this.storyId = id;
-			this.fb_dtsg = fb_dtsg;
-			this.jazoest = jazoest;
 
-			if (data.match(title)[0] == "Stories")
-				resolve({
-					success: true,
-					threadId: this.threadId,
-					fb_dtsg,
-					jazoest,
-				});
-			else
-				resolve({
+			if (data.match(title)[0] != "Facebook")
+				return resolve({
 					success: false,
 					msg: "vui lòng đăng nhập facebook",
 				});
-		});
 
-		function getFbDtsg(data) {
-			const [fb_dtsg, b, jazoest] = data
-				.match(fbDtsg)[0]
-				.split(/", "/);
-			return { fb_dtsg, jazoest };
-		}
+			this.fb_dtsg = data.match(fbDtsg)[0];
+			this.jazoest = data.match(
+				/(?<=name="jazoest" value=\")(.*)(?=\" autocomplete=\"off\" \/><div)/
+			)[0];
+
+			resolve({
+				success: true,
+			});
+		});
 	}
 	sendReactStory(react, threadId) {
 		return new Promise(async (resolve, reject) => {
+			if (!this.fb_dtsg || !this.jazoest) await this.getField();
 			const { threadId, fb_dtsg, jazoest, actor_id } = this;
 
 			const queries = JSON.stringify({

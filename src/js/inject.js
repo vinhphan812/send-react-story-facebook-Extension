@@ -6,8 +6,15 @@ if (chrome) {
 		/,"value":"|"},{"name":"/g,
 	];
 	var body = document.body.innerHTML;
+	let fb_dtsg = "",
+		jazoest = "";
+
 	const id = body.match(regexs[0])[0].split(regexs[2])[1];
-	const [fb_dtsg, a, jazoest] = body.match(regexs[1])[0].split(regexs[3]);
+	if (body.match(/fb_dtsg/g)) {
+		const [a, b, c] = body.match(regexs[1])[0].split(regexs[3]);
+		fb_dtsg = a;
+		jazoest = c;
+	}
 
 	sendDataStory(fb_dtsg, jazoest, id);
 	document.body.onclick = function () {
@@ -34,7 +41,15 @@ function sendDataStory(fb_dtsg, jazoest, id) {
 			avt = document.querySelector(selected[1]).getAttribute("src"),
 			name = document.querySelector(selected[2]).textContent;
 		console.log(document.querySelectorAll(selected[2]));
-
+		console.log({
+			hashId,
+			name,
+			avt,
+			fb_dtsg,
+			jazoest,
+			id,
+			success: true,
+		});
 		port.postMessage(
 			{ hashId, name, avt, fb_dtsg, jazoest, id, success: true },
 			function (res) {
