@@ -12,6 +12,7 @@
 		"default_popup": "popup.html"
 	},
 	"permissions": [
+		"tabs",
 		"webRequest",
 		"webRequestBlocking",
 		"https://*.facebook.com/*",

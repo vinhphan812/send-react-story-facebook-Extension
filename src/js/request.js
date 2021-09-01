@@ -95,11 +95,8 @@ class Facebook {
 			return { fb_dtsg, jazoest };
 		}
 	}
-	sendReactStory(react, storyId = id) {
+	sendReactStory(react, threadId) {
 		return new Promise(async (resolve, reject) => {
-			if (storyId != this.storyId || !this.fb_dtsg || !this.jazoest)
-				await this.getThreadId(storyId);
-			if (!this.actor_id) await this.getActorId();
 			const { threadId, fb_dtsg, jazoest, actor_id } = this;
 
 			const queries = JSON.stringify({
