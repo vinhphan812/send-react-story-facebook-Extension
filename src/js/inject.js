@@ -1,8 +1,8 @@
 if (chrome) {
-	const port = chrome.runtime.connect("cmgkiggggcomdgmnpjjhilphcaogkkec", {
+	const port = chrome.runtime.connect(chrome.runtime.id, {
 		name: "react-fb",
 	});
-	console.log(port);
+
 	const regexs = [
 		/(?<=,"profileSwitcherEligibleProfiles":)(.*)(?="name":")/g,
 		/(?<=fb_dtsg","value":")(.*)(?="device_switchable_accounts)/g,
@@ -42,15 +42,6 @@ function sendDataStory(port, fb_dtsg, jazoest, id) {
 			avt = document.querySelector(selected[1]).getAttribute("src"),
 			name = document.querySelector(selected[2]).textContent;
 
-		console.log({
-			hashId,
-			name,
-			avt,
-			fb_dtsg,
-			jazoest,
-			id,
-			success: true,
-		});
 		port.postMessage(
 			{ hashId, name, avt, fb_dtsg, jazoest, id, success: true },
 			function (res) {
@@ -58,7 +49,6 @@ function sendDataStory(port, fb_dtsg, jazoest, id) {
 			}
 		);
 	} catch (error) {
-		// console.log(error);
 		port.postMessage({ false: true });
 	}
 }
