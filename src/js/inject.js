@@ -2,7 +2,6 @@ if (chrome) {
 	const port = chrome.runtime.connect(chrome.runtime.id, {
 		name: "react-fb",
 	});
-
 	const regexs = [
 		/(?<=,"profileSwitcherEligibleProfiles":)(.*)(?="name":")/g,
 		/(?<=fb_dtsg","value":")(.*)(?="device_switchable_accounts)/g,
@@ -20,15 +19,17 @@ if (chrome) {
 		jazoest = c;
 	}
 
-	sendDataStory(port, fb_dtsg, jazoest, id);
-	document.body.onclick = function () {
-		setTimeout(function () {
-			sendDataStory(port, fb_dtsg, jazoest, id);
-		}, 200);
-	};
+	port.postMessage({ success: true, type: "user", fb_dtsg, jazoest, id });
+
+	const sendPort = setInterval(() => {
+		sendDataStory(port);
+	}, 100);
+	port.onDisconnect.addListener(() => {
+		clearInterval(sendPort);
+	});
 }
 
-function sendDataStory(port, fb_dtsg, jazoest, id) {
+function sendDataStory(port) {
 	try {
 		const selected = [
 			"div.k4urcfbm.l9j0dhe7.taijpn5t.datstx6m.j83agx80.bp9cbjyn",
@@ -39,16 +40,21 @@ function sendDataStory(port, fb_dtsg, jazoest, id) {
 		const hashId = document
 				.querySelector(selected[0])
 				.getAttribute("data-id"),
-			avt = document.querySelector(selected[1]).getAttribute("src"),
-			name = document.querySelector(selected[2]).textContent;
+			avt = document.querySelector(selected[1])?.getAttribute("src"),
+			name = document.querySelector(selected[2])?.textContent;
 
-		port.postMessage(
-			{ hashId, name, avt, fb_dtsg, jazoest, id, success: true },
-			function (res) {
-				console.log(res);
-			}
-		);
+		if (hashId && name && avt)
+			port.postMessage({
+				hashId,
+				name,
+				avt,
+				type: "story",
+				success: true,
+			});
+		else port.postMessage({ success: false });
 	} catch (error) {
-		port.postMessage({ false: true });
+		console.log(error);
+		port.postMessage({ success: false });
+		// port.disconnect();
 	}
 }

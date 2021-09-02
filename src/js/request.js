@@ -85,7 +85,7 @@ class Facebook {
 			});
 		});
 	}
-	sendReactStory(react, threadId) {
+	sendReactStory(react) {
 		return new Promise(async (resolve, reject) => {
 			if (!this.fb_dtsg || !this.jazoest) await this.getField();
 			const { threadId, fb_dtsg, jazoest, actor_id } = this;
