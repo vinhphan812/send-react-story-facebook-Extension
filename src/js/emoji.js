@@ -9,17 +9,12 @@ function iconRender(item) {
 
 $(".icon").click(async function () {
 	console.log(this.getAttribute("icon-data"));
-	const id = $("#thread").attr("thread_id");
 
-	if (id.length) {
-		const res = await fb.sendReactStory(
-			this.getAttribute("icon-data"),
-			id
-		);
-		console.log(res);
+	if (fb.threadId) {
+		const res = await fb.sendReactStory(this.getAttribute("icon-data"));
 		if (res.success) $("#thread").text("✔️ Gửi Thành Công.");
 		else $("#thread").text("Gửi thất bại!!!");
-	} else console.log(id);
+	} else console.log(fb.threadId);
 });
 
 function renderUser() {

@@ -32,6 +32,10 @@ function listenPort(port) {
 }
 
 function notDetect() {
+	fb.hashId = "";
+	fb.threadId = "";
+	fb.avt = "";
+	fb.name = "";
 	if (!$(".not-detect").length)
 		$("#story").html(
 			"<div class='not-detect'>⚠️ Không phát hiện story!!!</div>"
