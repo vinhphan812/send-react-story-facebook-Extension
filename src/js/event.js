@@ -4,9 +4,9 @@ chrome.tabs.getSelected(null, function (tab) {
 	else notDetect();
 });
 
-// chrome.runtime.onConnectExternal.addListener(listenPort);
-
 chrome.runtime.onConnect.addListener(listenPort);
+
+// chrome.runtime.onConnectExternal.addListener(listenPort);
 
 // chrome.runtime.onMessage.addListener((message) => {
 // 	console.log("onMessage");
