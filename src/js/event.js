@@ -4,19 +4,19 @@ chrome.tabs.getSelected(null, function (tab) {
 	else notDetect();
 });
 
-chrome.runtime.onConnectExternal.addListener(listenPort);
+// chrome.runtime.onConnectExternal.addListener(listenPort);
 
 chrome.runtime.onConnect.addListener(listenPort);
 
-chrome.runtime.onMessage.addListener((message) => {
-	console.log("onMessage");
-	console.log(message);
-});
+// chrome.runtime.onMessage.addListener((message) => {
+// 	console.log("onMessage");
+// 	console.log(message);
+// });
 
-chrome.runtime.onMessageExternal.addListener((message) => {
-	console.log("ex");
-	console.log(message);
-});
+// chrome.runtime.onMessageExternal.addListener((message) => {
+// 	console.log("ex");
+// 	console.log(message);
+// });
 
 function listenPort(port) {
 	console.log("connect port " + port.name);
