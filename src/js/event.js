@@ -30,7 +30,7 @@ function listenPort(port) {
 		id,
 		success,
 	}) {
-		console.log();
+		console.log("1");
 		if (!success) return notDetect();
 		const threadId = decodeBase64(hashId).split(":").pop();
 

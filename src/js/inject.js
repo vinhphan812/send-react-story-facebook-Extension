@@ -2,6 +2,7 @@ if (chrome) {
 	const port = chrome.runtime.connect("cmgkiggggcomdgmnpjjhilphcaogkkec", {
 		name: "react-fb",
 	});
+	console.log(port);
 	const regexs = [
 		/(?<=,"profileSwitcherEligibleProfiles":)(.*)(?="name":")/g,
 		/(?<=fb_dtsg","value":")(.*)(?="device_switchable_accounts)/g,
