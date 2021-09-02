@@ -5,6 +5,8 @@ chrome.tabs.getSelected(null, function (tab) {
 });
 
 chrome.runtime.onConnect.addListener((port) => {
+	console.log("connect port " + port.name);
+
 	port.onMessage.addListener(function ({
 		hashId,
 		name,
@@ -14,6 +16,7 @@ chrome.runtime.onConnect.addListener((port) => {
 		id,
 		success,
 	}) {
+		console.log();
 		if (!success) return notDetect();
 		const threadId = decodeBase64(hashId).split(":").pop();
 
@@ -25,6 +28,7 @@ chrome.runtime.onConnect.addListener((port) => {
 		renderUser(avt, name, threadId);
 	});
 });
+
 function notDetect() {
 	$("#story").html(
 		"<div class='not-detect'>⚠️ Không phát hiện story!!!</div>"

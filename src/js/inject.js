@@ -1,4 +1,7 @@
 if (chrome) {
+	const port = chrome.runtime.connect("cmgkiggggcomdgmnpjjhilphcaogkkec", {
+		name: "react-fb",
+	});
 	const regexs = [
 		/(?<=,"profileSwitcherEligibleProfiles":)(.*)(?="name":")/g,
 		/(?<=fb_dtsg","value":")(.*)(?="device_switchable_accounts)/g,
@@ -16,18 +19,15 @@ if (chrome) {
 		jazoest = c;
 	}
 
-	sendDataStory(fb_dtsg, jazoest, id);
+	sendDataStory(port, fb_dtsg, jazoest, id);
 	document.body.onclick = function () {
 		setTimeout(function () {
-			sendDataStory(fb_dtsg, jazoest, id);
+			sendDataStory(port, fb_dtsg, jazoest, id);
 		}, 200);
 	};
 }
 
-function sendDataStory(fb_dtsg, jazoest, id) {
-	const port = chrome.runtime.connect("cmgkiggggcomdgmnpjjhilphcaogkkec", {
-		name: "send react extension",
-	});
+function sendDataStory(port, fb_dtsg, jazoest, id) {
 	try {
 		const selected = [
 			"div.k4urcfbm.l9j0dhe7.taijpn5t.datstx6m.j83agx80.bp9cbjyn",
@@ -40,7 +40,7 @@ function sendDataStory(fb_dtsg, jazoest, id) {
 				.getAttribute("data-id"),
 			avt = document.querySelector(selected[1]).getAttribute("src"),
 			name = document.querySelector(selected[2]).textContent;
-		console.log(document.querySelectorAll(selected[2]));
+
 		console.log({
 			hashId,
 			name,
@@ -56,9 +56,8 @@ function sendDataStory(fb_dtsg, jazoest, id) {
 				console.log(res);
 			}
 		);
-		port.disconnect();
 	} catch (error) {
-		console.log(error);
+		// console.log(error);
 		port.postMessage({ false: true });
 	}
 }
