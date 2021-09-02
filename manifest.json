@@ -13,7 +13,6 @@
 	},
 	"permissions": [
 		"tabs",
-		"activeTab",
 		"webRequest",
 		"webRequestBlocking",
 		"https://*.facebook.com/*",
