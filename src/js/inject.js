@@ -55,6 +55,5 @@ function sendDataStory(port) {
 	} catch (error) {
 		console.log(error);
 		port.postMessage({ success: false });
-		// port.disconnect();
 	}
 }
