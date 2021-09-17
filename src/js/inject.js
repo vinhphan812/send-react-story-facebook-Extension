@@ -1,14 +1,18 @@
+console.clear();
+console.debug("🚀 Facebook React Extension by Vinh Phan 🚀");
+
 if (chrome) {
+	const regexs = [
+			/(?<=,"profileSwitcherEligibleProfiles":)(.*)(?="name":")/g,
+			/(?<=fb_dtsg","value":")(.*)(?="device_switchable_accounts)/g,
+			/\"id\":\"|\",\"name\":/g,
+			/,"value":"|"},{"name":"/g,
+		],
+		body = document.body.innerHTML;
 	const port = chrome.runtime.connect(chrome.runtime.id, {
 		name: "react-fb",
 	});
-	const regexs = [
-		/(?<=,"profileSwitcherEligibleProfiles":)(.*)(?="name":")/g,
-		/(?<=fb_dtsg","value":")(.*)(?="device_switchable_accounts)/g,
-		/\"id\":\"|\",\"name\":/g,
-		/,"value":"|"},{"name":"/g,
-	];
-	var body = document.body.innerHTML;
+
 	let fb_dtsg = "",
 		jazoest = "";
 
@@ -18,8 +22,13 @@ if (chrome) {
 		fb_dtsg = a;
 		jazoest = c;
 	}
-
-	port.postMessage({ success: true, type: "user", fb_dtsg, jazoest, id });
+	port.postMessage({
+		success: true,
+		type: "user",
+		fb_dtsg,
+		jazoest,
+		id,
+	});
 
 	const sendPort = setInterval(() => {
 		sendDataStory(port);
@@ -54,6 +63,5 @@ function sendDataStory(port) {
 		else port.postMessage({ success: false });
 	} catch (error) {
 		console.log(error);
-		port.postMessage({ success: false });
 	}
 }

@@ -13,6 +13,7 @@ class Facebook {
 		title: /(?<=<title>)(.*)(?=<\/title>)/g,
 		thread: /(?<=threadId:\")([0-9]*)(?=\")/g,
 		fbDtsg: /(?<=name="fb_dtsg" value=\")(.*)(?=\" autocomplete=\"off\" \/><input)/g,
+		jazoest: /(?<=name="jazoest" value=\")(.*)(?=\" autocomplete=\"off\" \/><div)/g,
 	};
 	constructor() {}
 	requestServer(data = { path: "/", form: "" }) {
@@ -39,51 +40,6 @@ class Facebook {
 			}
 			return formBody.join("&");
 		}
-	}
-	getActorId() {
-		const { title, userId, token } = this.regex;
-		return new Promise(async (resolve, reject) => {
-			var data = await this.requestServer({
-				path: "/composer/ocelot/async_loader/?publisher=feed",
-			});
-
-			if (data.match(title))
-				return resolve({
-					success: false,
-					msg: "Vui lòng đăng nhập facebook",
-				});
-			this.actor_id = data.match(userId)[0];
-			this.token = data.match(token)[0];
-			resolve({
-				success: true,
-				actor_id: this.actor_id,
-				token: this.token,
-			});
-		});
-	}
-	getField(id) {
-		const { thread, title, fbDtsg } = this.regex,
-			storyPath = "/story/view/?bucket_id=";
-		return new Promise(async (resolve, reject) => {
-			let data = await this.requestServer({
-				path: "/",
-			});
-
-			if (data.match(title)[0] != "Facebook")
-				return resolve({
-					success: false,
-					msg: "vui lòng đăng nhập facebook",
-				});
-
-			this.fb_dtsg = data.match(fbDtsg)[0];
-			this.jazoest = data.match(
-				/(?<=name="jazoest" value=\")(.*)(?=\" autocomplete=\"off\" \/><div)/
-			)[0];
-
-			resolve({
-				success: true,
-			});
-		});
 	}
 	sendReactStory(react) {
 		return new Promise(async (resolve, reject) => {
