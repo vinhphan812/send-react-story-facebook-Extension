@@ -1,32 +1,41 @@
+console.clear();
+console.debug("🚀 Facebook React Extension by Vinh Phan 🚀");
+
 if (chrome) {
-	const port = chrome.runtime.connect(chrome.runtime.id, {
-		name: "react-fb",
-	});
 	const regexs = [
-		/(?<=,"profileSwitcherEligibleProfiles":)(.*)(?="name":")/g,
-		/(?<=fb_dtsg","value":")(.*)(?="device_switchable_accounts)/g,
-		/\"id\":\"|\",\"name\":/g,
-		/,"value":"|"},{"name":"/g,
-	];
-	var body = document.body.innerHTML;
+			/(?<=USER_ID":")(.*)(?=","NAME)/g,
+			/(?<=")(.{29})(?=","async)/g,
+			/(?<=jazoest=)(\d*)(?=",")/g,
+		],
+		body = document.querySelector("html").innerHTML;
+
 	let fb_dtsg = "",
 		jazoest = "";
 
-	const id = body.match(regexs[0])[0].split(regexs[2])[1];
-	if (body.match(/fb_dtsg/g)) {
-		const [a, b, c] = body.match(regexs[1])[0].split(regexs[3]);
-		fb_dtsg = a;
-		jazoest = c;
+	const id = body.match(regexs[0])[0].split('"')[0];
+	if (body.match(/token/g)) {
+		fb_dtsg = body.match(regexs[1])[0];
+		jazoest = body.match(regexs[2])[0];
 	}
+	try {
+		const port = chrome.runtime.connect(chrome.runtime.id, {
+			name: "react-fb",
+		});
+		port.postMessage({
+			success: true,
+			type: "user",
+			fb_dtsg,
+			jazoest,
+			id,
+		});
 
-	port.postMessage({ success: true, type: "user", fb_dtsg, jazoest, id });
-
-	const sendPort = setInterval(() => {
-		sendDataStory(port);
-	}, 100);
-	port.onDisconnect.addListener(() => {
-		clearInterval(sendPort);
-	});
+		const sendPort = setInterval(() => {
+			sendDataStory(port);
+		}, 100);
+		port.onDisconnect.addListener(() => {
+			clearInterval(sendPort);
+		});
+	} catch (error) {}
 }
 
 function sendDataStory(port) {
@@ -54,6 +63,5 @@ function sendDataStory(port) {
 		else port.postMessage({ success: false });
 	} catch (error) {
 		console.log(error);
-		port.postMessage({ success: false });
 	}
 }
